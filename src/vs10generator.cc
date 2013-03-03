@@ -115,6 +115,7 @@ void VS10Generator::generate(Parser& parser)
 				<< "<Optimization>Disabled</Optimization>" << std::endl
 				<< "</ClCompile>" << std::endl
 				<< "<Link>" << std::endl
+				<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
 				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl;
 			// Dump dependencies for debug configuration
 			ofs << "<AdditionalDependencies>%(AdditionalDependencies);";
@@ -140,6 +141,7 @@ void VS10Generator::generate(Parser& parser)
 				<< "<Link>" << std::endl
 				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl
 				<< "<EnableCOMDATFolding>true</EnableCOMDATFolding>" << std::endl
+				<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
 				<< "<OptimizeReferences>true</OptimizeReferences>" << std::endl;
 			
 			// Dump dependencies for release configuration
