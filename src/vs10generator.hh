@@ -18,6 +18,8 @@ public:
 private:
 	
 	void generateSLNFile(Parser& parser);
+    void generateVCProject(Target* target, Parser& parser);
+    void generateUserprefs(Target* target, Parser& parser);
 	
 	// Map targets to guids
 	std::map<std::string, std::pair<std::string, std::string> > guidMap;
