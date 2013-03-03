@@ -81,6 +81,7 @@ void VS10Generator::generate(Parser& parser)
 				
 				<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">" << std::endl
 				<< "<TargetName>" << (*target)->name << "_d" << "</TargetName>" << std::endl
+				<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
 				<< "<OutDir>../</OutDir>" << std::endl;
 			
 				// Dump include paths
@@ -105,6 +106,7 @@ void VS10Generator::generate(Parser& parser)
 				
 				<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">" << std::endl
 				<< "<TargetName>" << (*target)->name << "</TargetName>" << std::endl
+				<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
 				<< "<OutDir>../</OutDir>" << std::endl
 				<< "<IncludePath>$(IncludePath);" << allIncludePaths << "</IncludePath>" << std::endl
 				<< "</PropertyGroup>" << std::endl
@@ -115,7 +117,6 @@ void VS10Generator::generate(Parser& parser)
 				<< "<Optimization>Disabled</Optimization>" << std::endl
 				<< "</ClCompile>" << std::endl
 				<< "<Link>" << std::endl
-				<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
 				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl;
 			// Dump dependencies for debug configuration
 			ofs << "<AdditionalDependencies>%(AdditionalDependencies);";
