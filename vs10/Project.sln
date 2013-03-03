@@ -1,0 +1,11 @@
+
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{a9a0ada3-ec93-4056-ba3a-bf0231bc947b}") = "dmake", "dmake.vcxproj", "{862ab383-dbeb-4196-8d05-91c1a9252924}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+EndGlobal
