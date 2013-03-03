@@ -7,7 +7,7 @@
 #include <map>
 
 class Parser;
-class Target;
+struct Target;
 
 class VS10Generator : public Generator
 {

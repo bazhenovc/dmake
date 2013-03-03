@@ -6,6 +6,7 @@
 #include "parser.hh"
 #include "generator.hh"
 #include "makefilegenerator.hh"
+#include "vs10generator.hh"
 
 int main(int argc, char** argv)
 {
@@ -19,6 +20,7 @@ int main(int argc, char** argv)
     
     std::vector<Generator*> generators;
     generators.push_back(new MakefileGenerator);
+	generators.push_back(new VS10Generator);
     
     foreach (g, generators) {
         (*g)->generate(parser);

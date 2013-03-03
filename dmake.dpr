@@ -6,6 +6,8 @@ section compilers
         section flags
         {
             -Wall
+            -MMD
+            -MD
         }
         section cpp_flags
         {
@@ -20,14 +22,27 @@ executable dmake
     {
         src/common.hh
         src/generator.hh
+        src/guid.hh
         src/makefilegenerator.hh
         src/parser.hh
         src/target.hh
+        src/vs10generator.hh
     }
     section src_files
     {
         src/main.cc
         src/parser.cc
         src/makefilegenerator.cc
+        src/vs10generator.cc
+    }
+    section platforms
+    {
+        section linux
+        {
+            section linker
+            {
+                -luuid
+            }
+        }
     }
 }

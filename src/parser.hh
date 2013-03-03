@@ -3,7 +3,7 @@
 
 #include "common.hh"
 
-class Target;
+struct Target;
 
 class Parser
 {

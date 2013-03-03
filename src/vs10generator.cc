@@ -48,7 +48,7 @@ void VS10Generator::generate(Parser& parser)
 				<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\" Label=\"Configuration\">" << std::endl;
 			std::string targetType;
 			if (Target::Library == (*target)->type)
-				targetType = "Library";
+				targetType = "DynamicLibrary";
 			else
 				targetType = "Application";
 			
@@ -115,8 +115,19 @@ void VS10Generator::generate(Parser& parser)
 				<< "<Optimization>Disabled</Optimization>" << std::endl
 				<< "</ClCompile>" << std::endl
 				<< "<Link>" << std::endl
-				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl
-				<< "</Link>" << std::endl
+				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl;
+			// Dump dependencies for debug configuration
+			ofs << "<AdditionalDependencies>%(AdditionalDependencies);";
+			foreach (dep, (*target)->contents["deps"]) {
+				// _d prefix for debug
+				ofs << *dep << "_d.lib;";
+			}
+			foreach (lib, (*target)->contents["platforms.win32.linker"]) {
+				ofs << *lib << ";";
+			}
+			ofs << "</AdditionalDependencies>" << std::endl;
+			
+			ofs << "</Link>" << std::endl
 				<< "</ItemDefinitionGroup>" << std::endl
   
 				<< "<ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">" << std::endl
@@ -129,20 +140,31 @@ void VS10Generator::generate(Parser& parser)
 				<< "<Link>" << std::endl
 				<< "<GenerateDebugInformation>true</GenerateDebugInformation>" << std::endl
 				<< "<EnableCOMDATFolding>true</EnableCOMDATFolding>" << std::endl
-				<< "<OptimizeReferences>true</OptimizeReferences>" << std::endl
-				<< "</Link>" << std::endl
+				<< "<OptimizeReferences>true</OptimizeReferences>" << std::endl;
+			
+			// Dump dependencies for release configuration
+			ofs << "<AdditionalDependencies>%(AdditionalDependencies);";
+			foreach (dep, (*target)->contents["deps"]) {
+				ofs << *dep << ".lib;";
+			}
+			foreach (lib, (*target)->contents["platforms.win32.linker"]) {
+				ofs << *lib << ";";
+			}
+			ofs << "</AdditionalDependencies>" << std::endl;
+			
+			ofs << "</Link>" << std::endl
 				<< "</ItemDefinitionGroup>" << std::endl;
 			
 			// Write header files
 			ofs << "<ItemGroup>" << std::endl;
 			foreach (hdr, (*target)->contents["hdr_files"]) {
 				ofs << "<ClInclude Include=\"../" << *hdr << "\">" << std::endl
-					<< "<FileType>Document</FileType>" << std::endl
+					<< "<FileType>CppHeader</FileType>" << std::endl
 					<< "</ClInclude>" << std::endl;
 			}
 			foreach (hdr, (*target)->contents["platforms.win32.hdr_files"]) {
 				ofs << "<ClInclude Include=\"../" << *hdr << "\">" << std::endl
-					<< "<FileType>Document</FileType>" << std::endl
+					<< "<FileType>CppHeader</FileType>" << std::endl
 					<< "</ClInclude>" << std::endl;
 			}
 			ofs << "</ItemGroup>" << std::endl;

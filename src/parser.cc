@@ -69,10 +69,25 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
             parseRecursive(stream, name + sectionPrefix + sectionName);
         } else {
             // Parse section contents
+			std::string contents;
+			if ("{" == token) {
+				char c;
+				// Read junk whitespace
+				stream.get(c);
+				while ('}' != c) {
+					stream.get(c);
+					contents.append(1, c);
+				}
+				// Remove junk ' }'
+				contents.resize(contents.size() - 2);
+			} else {
+				contents = token;
+			}
+			
             if (mCurrentTarget)
-                mCurrentTarget->contents[name].push_back(token);
+                mCurrentTarget->contents[name].push_back(contents);
             else
-                mContents[name].push_back(token);
+                mContents[name].push_back(contents);
         }
 
         stream >> token;
