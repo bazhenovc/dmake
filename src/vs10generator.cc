@@ -19,9 +19,7 @@ void VS10Generator::generate(Parser& parser)
 
 	// Generate VC projects
 
-	foreach(target, parser.getTargets())
-	{
-
+	foreach(target, parser.getTargets()) {
 		generateVCProject(*target, parser);
 	}
 }
