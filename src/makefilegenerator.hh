@@ -33,6 +33,7 @@ public:
                 std::string compiler = compilerMap[ext];
                 
                 ofs << "$(BUILD_DIR)/" << extractedSource << "_" << name << ".o: " << (*src) << std::endl
+			<< "\techo compiling " << extractedSource << " -> " << extractedSource << "_" << name << ".o" << std::endl
                         << "\t" << compiler << " $(GLOBAL_FLAGS)" << flagMap[compiler] << " " << "$(" << flags << ") -c " << (*src) << " -o $(BUILD_DIR)/" << extractedSource << "_" << name << ".o" << std::endl;
             }        
     }

@@ -113,6 +113,7 @@ void MakefileGenerator::generate(Parser& parser)
             ofs << targetName << ": " << targetOut << std::endl;
 
         ofs << targetOut << ": $(" << targetObjects << ") " << deps << std::endl
+		<< "\techo linking " << targetOut << std::endl
                 << "\t$(CXX) -L$(DEST_DIR) -Wl,-rpath=$(DEST_DIR) $(" << targetObjects << ") -o $(DEST_DIR)/" << targetOut;
 
         if (Target::Library == (*itr)->type)
