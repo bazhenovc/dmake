@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+<FileVersion major="1" minor="6" />
+<Project>
+<Option title="Project" />
+<Option makefile_is_custom="1" />
+<Build>
+<Target title="all"></Target>
+</Build>
+<Unit filename="src/main.cc" />
+<Unit filename="src/parser.cc" />
+<Unit filename="src/makefilegenerator.cc" />
+<Unit filename="src/vs10generator.cc" />
+<Unit filename="src/codeblocksgenerator.cc" />
+<Unit filename="src/common.hh" />
+<Unit filename="src/generator.hh" />
+<Unit filename="src/guid.hh" />
+<Unit filename="src/makefilegenerator.hh" />
+<Unit filename="src/parser.hh" />
+<Unit filename="src/target.hh" />
+<Unit filename="src/vs10generator.hh" />
+<Unit filename="src/codeblocksgenerator.hh" />
+<Extensions>
+<code_completion />
+<debugger />
+</Extensions>
+</Project>
+</CodeBlocks_project_file>

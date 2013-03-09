@@ -27,6 +27,7 @@ executable dmake
         src/parser.hh
         src/target.hh
         src/vs10generator.hh
+	src/codeblocksgenerator.hh
     }
     section src_files
     {
@@ -34,6 +35,7 @@ executable dmake
         src/parser.cc
         src/makefilegenerator.cc
         src/vs10generator.cc
+	src/codeblocksgenerator.cc
     }
     section platforms
     {

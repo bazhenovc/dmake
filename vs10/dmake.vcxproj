@@ -11,7 +11,7 @@
 </ProjectConfiguration>
 </ItemGroup>
 <PropertyGroup Label="Globals">
-<ProjectGuid>{504e1c04-26b0-4815-95c9-997930e56c65}</ProjectGuid>
+<ProjectGuid>{660c13a3-ab56-4ef0-970a-28438a673061}</ProjectGuid>
 <RootNamespace>dmake</RootNamespace>
 </PropertyGroup>
 <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -94,12 +94,16 @@
 <ClInclude Include="../src/vs10generator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
+<ClInclude Include="../src/codeblocksgenerator.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
 </ItemGroup>
 <ItemGroup>
 <ClCompile Include="../src/main.cc" />
 <ClCompile Include="../src/parser.cc" />
 <ClCompile Include="../src/makefilegenerator.cc" />
 <ClCompile Include="../src/vs10generator.cc" />
+<ClCompile Include="../src/codeblocksgenerator.cc" />
 </ItemGroup>
 <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 <ImportGroup Label="ExtensionTargets">
