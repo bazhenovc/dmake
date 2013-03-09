@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<PropertyGroup>
+<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+<ProductVersion>10.0.0</ProductVersion>
+<SchemaVersion>2.0</SchemaVersion>
+<ProjectGuid>{bfa0da65-7d46-47f0-a5b3-b030553975f6}</ProjectGuid>
+<Target>Bin</Target>
+<Language>CPP</Language>
+<Compiler>
+<Compiler ctype="GppCompiler" />
+</Compiler>
+</PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'" Label="Configuration">
+<ConfigurationType>Application</ConfigurationType>
+<UseDebugLibraries>true</UseDebugLibraries>
+<CharacterSet>MultiByte</CharacterSet>
+</PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Any CPU'" Label="Configuration">
+<ConfigurationType>Application</ConfigurationType>
+<UseDebugLibraries>false</UseDebugLibraries>
+<WholeProgramOptimization>true</WholeProgramOptimization>
+<CharacterSet>MultiByte</CharacterSet>
+</PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">
+<TargetName>dmake_d</TargetName>
+<LibraryPath>../;$(LibraryPath)</LibraryPath>
+<OutDir>../</OutDir>
+<IncludePath>$(IncludePath);</IncludePath>
+</PropertyGroup>
+<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Any CPU'">
+<TargetName>dmake</TargetName>
+<LibraryPath>../;$(LibraryPath)</LibraryPath>
+<OutDir>../</OutDir>
+<IncludePath>$(IncludePath);</IncludePath>
+</PropertyGroup>
+<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">
+<ClCompile>
+<WarningLevel>Level3</WarningLevel>
+<Optimization>Disabled</Optimization>
+</ClCompile>
+<Link>
+<GenerateDebugInformation>true</GenerateDebugInformation>
+<AdditionalDependencies>%(AdditionalDependencies);-luuid;</AdditionalDependencies>
+</Link>
+</ItemDefinitionGroup>
+<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Any CPU'">
+<ClCompile>
+<WarningLevel>Level3</WarningLevel>
+<Optimization>MaxSpeed</Optimization>
+<FunctionLevelLinking>true</FunctionLevelLinking>
+<IntrinsicFunctions>true</IntrinsicFunctions>
+</ClCompile>
+<Link>
+<GenerateDebugInformation>true</GenerateDebugInformation>
+<EnableCOMDATFolding>true</EnableCOMDATFolding>
+<OptimizeReferences>true</OptimizeReferences>
+<AdditionalDependencies>%(AdditionalDependencies);-luuid;</AdditionalDependencies>
+</Link>
+</ItemDefinitionGroup>
+<ItemGroup>
+<ClInclude Include="../src/common.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/generator.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/guid.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/makefilegenerator.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/parser.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/target.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/vs10generator.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+<ClInclude Include="../src/codeblocksgenerator.hh">
+<FileType>CppHeader</FileType>
+</ClInclude>
+</ItemGroup>
+<ItemGroup>
+<ClCompile Include="../src/main.cc" />
+<ClCompile Include="../src/parser.cc" />
+<ClCompile Include="../src/makefilegenerator.cc" />
+<ClCompile Include="../src/vs10generator.cc" />
+<ClCompile Include="../src/codeblocksgenerator.cc" />
+</ItemGroup>
+</Project>
