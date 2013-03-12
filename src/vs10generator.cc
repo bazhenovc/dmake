@@ -181,6 +181,8 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 		std::string targetType;
 		if (Target::Library == target->type)
 			targetType = "DynamicLibrary";
+		else if (Target::StaticLibrary == target->type)
+			targetType = "StaticLibrary";
 		else {
 			targetType = "Application";
 			generateUserprefs(target, parser);

@@ -8,14 +8,15 @@ struct Target
     enum Type
     {
         Library,
+        StaticLibrary,
         Executable
     };
-    
+
     Type type;
     std::map<std::string, std::list<std::string> > contents;
-    
+
     std::string name;
-    
+
     void dump() const
     {
         foreach (itr, contents) {

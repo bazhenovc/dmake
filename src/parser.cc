@@ -28,6 +28,8 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
 
     do {
 
+        // TODO: refactor
+
         if ("executable" == token) {
             std::string sectionName;
             std::string junk; // {
@@ -60,7 +62,23 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
 
             parseRecursive(stream, ""); // no nested targets
 
-        } else if ("section" == token) {
+        } else if ("static_library" == token) {
+            std::string sectionName;
+            std::string junk; // {
+            stream >> sectionName;
+            stream >> junk;
+
+            Target* target = new Target;
+            target->name = sectionName;
+
+            target->type = Target::StaticLibrary;
+
+            mTargets.push_back(target);
+            mCurrentTarget = target;
+
+            parseRecursive(stream, ""); // no nested targets
+
+        }else if ("section" == token) {
             std::string sectionName;
             std::string junk; // {
             stream >> sectionName;
@@ -83,7 +101,7 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
 			} else {
 				contents = token;
 			}
-			
+
             if (mCurrentTarget)
                 mCurrentTarget->contents[name].push_back(contents);
             else

@@ -64,6 +64,11 @@ void MakefileGenerator::generate(Parser& parser)
             targetOut = "lib";
             targetOut += targetName;
             targetOut += ".so";
+        }
+        else if (Target::StaticLibrary == (*itr)->type) {
+            targetOut = "lib";
+            targetOut += targetName;
+            targetOut += ".a";
         } else {
             targetOut = (*itr)->name;
         }
@@ -92,7 +97,7 @@ void MakefileGenerator::generate(Parser& parser)
         foreach(inc, (*itr)->contents["platforms.linux.inc_paths"]) {
             ofs << " -I" << *inc;
         }
-        if (Target::Library == (*itr)->type) {
+        if (Target::Library == (*itr)->type || Target::StaticLibrary == (*itr)->type) {
             ofs << " -DPIC -fPIC";
         }
         ofs << std::endl;
@@ -116,16 +121,21 @@ void MakefileGenerator::generate(Parser& parser)
             ofs << targetName << ": " << targetOut << std::endl;
 
         ofs << targetOut << ": $(" << targetObjects << ") " << deps << std::endl
-		<< "\techo \"linking " << targetOut << "\"" << std::endl
-                << "\t$(CXX) -L$(DEST_DIR) -Wl,-rpath=$(DEST_DIR) $(" << targetObjects << ") -o $(DEST_DIR)/" << targetOut;
+            << "\techo \"linking " << targetOut << "\"" << std::endl;
+		if (Target::StaticLibrary == (*itr)->type)
+			ofs << "\tar rcs $(DEST_DIR)/" << targetOut << " $(" << targetObjects << ")" << std::endl;
+		else {
 
-        if (Target::Library == (*itr)->type)
-            ofs << " -shared ";
+			ofs << "\t$(CXX) -L$(DEST_DIR) -Wl,-rpath=$(DEST_DIR) $(" << targetObjects << ") -o $(DEST_DIR)/" << targetOut;
 
-        foreach(link, (*itr)->contents["platforms.linux.linker"]) {
-            ofs << " " << (*link);
-        }
-        ofs << " " << linkDeps;
+			if (Target::Library == (*itr)->type)
+				ofs << " -shared ";
+
+			foreach(link, (*itr)->contents["platforms.linux.linker"]) {
+				ofs << " " << (*link);
+			}
+			ofs << " " << linkDeps;
+		}
 
         ofs << std::endl << std::endl;
     }
