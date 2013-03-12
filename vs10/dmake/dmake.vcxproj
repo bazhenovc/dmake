@@ -11,7 +11,7 @@
 </ProjectConfiguration>
 </ItemGroup>
 <PropertyGroup Label="Globals">
-<ProjectGuid>{00fff2a2-6f26-4491-b4ce-a27e0b0e30da}</ProjectGuid>
+<ProjectGuid>{6a42c37d-7567-4736-a2fd-1597abb6a160}</ProjectGuid>
 <RootNamespace>dmake</RootNamespace>
 </PropertyGroup>
 <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -38,14 +38,14 @@
 <PropertyGroup Label="UserMacros" />
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
 <TargetName>dmake_d</TargetName>
-<LibraryPath>../;$(LibraryPath)</LibraryPath>
-<OutDir>../</OutDir>
+<LibraryPath>../../;$(LibraryPath)</LibraryPath>
+<OutDir>../../</OutDir>
 <IncludePath>$(IncludePath);</IncludePath>
 </PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
 <TargetName>dmake</TargetName>
-<LibraryPath>../;$(LibraryPath)</LibraryPath>
-<OutDir>../</OutDir>
+<LibraryPath>../../;$(LibraryPath)</LibraryPath>
+<OutDir>../../</OutDir>
 <IncludePath>$(IncludePath);</IncludePath>
 </PropertyGroup>
 <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -73,37 +73,37 @@
 </Link>
 </ItemDefinitionGroup>
 <ItemGroup>
-<ClInclude Include="../src/common.hh">
+<ClInclude Include="../../src/common.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/generator.hh">
+<ClInclude Include="../../src/generator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/guid.hh">
+<ClInclude Include="../../src/guid.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/makefilegenerator.hh">
+<ClInclude Include="../../src/makefilegenerator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/parser.hh">
+<ClInclude Include="../../src/parser.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/target.hh">
+<ClInclude Include="../../src/target.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/vs10generator.hh">
+<ClInclude Include="../../src/vs10generator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/codeblocksgenerator.hh">
+<ClInclude Include="../../src/codeblocksgenerator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
 </ItemGroup>
 <ItemGroup>
-<ClCompile Include="../src/main.cc" />
-<ClCompile Include="../src/parser.cc" />
-<ClCompile Include="../src/makefilegenerator.cc" />
-<ClCompile Include="../src/vs10generator.cc" />
-<ClCompile Include="../src/codeblocksgenerator.cc" />
+<ClCompile Include="../../src/main.cc" />
+<ClCompile Include="../../src/parser.cc" />
+<ClCompile Include="../../src/makefilegenerator.cc" />
+<ClCompile Include="../../src/vs10generator.cc" />
+<ClCompile Include="../../src/codeblocksgenerator.cc" />
 </ItemGroup>
 <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 <ImportGroup Label="ExtensionTargets">

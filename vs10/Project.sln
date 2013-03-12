@@ -1,7 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{c50968d9-0d9b-4c47-8932-b58295e01e7c}") = "dmake", "dmake.vcxproj", "{00fff2a2-6f26-4491-b4ce-a27e0b0e30da}"
+Project("{f6fab0fa-cba2-4a18-9462-bad1b936a0cd}") = "dmake/dmake", "dmake/dmake.vcxproj", "{6a42c37d-7567-4736-a2fd-1597abb6a160}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

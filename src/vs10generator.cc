@@ -4,10 +4,23 @@
 #include "target.hh"
 #include "guid.hh"
 
+#ifndef _WIN32
+#include <sys/stat.h>
+#endif
+
 // quick and dirty hack to check, whether the path is relative
 inline bool isRelativePath(const std::string& path)
 {
 	return path[1] != ':' && path [0] != '/';
+}
+
+inline void createDir(const char* name)
+{
+#ifdef _WIN32
+	CreateDirectory(name, NULL);
+#else
+    mkdir(name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH); // lolwut?
+#endif
 }
 
 VS10Generator::VS10Generator(IDEType type)
@@ -42,14 +55,24 @@ void VS10Generator::generateSLNFile(Parser& parser)
 		ofs << "\nMicrosoft Visual Studio Solution File, Format Version 11.00" << std::endl
 			<< "# Visual C++ Express 2010" << std::endl;
 
-		// Dump all targets
-
-		foreach(target, parser.getTargets())
-		{
+		// First generate GUID map
+		foreach(target, parser.getTargets()) {
 			std::string guid = makeGUID();
 			std::string guid2 = makeGUID();
 
 			guidMap[(*target)->name] = std::make_pair(guid, guid2);
+		}
+
+		// Dump all targets
+		foreach (target, parser.getTargets()) {
+
+			auto targetGuids = guidMap[(*target)->name];
+			const std::string& guid = targetGuids.first;
+			const std::string& guid2 = targetGuids.second;
+
+			std::string projectName = (*target)->name;
+			projectName += "/";
+			projectName += (*target)->name;
 
 			// Write project info
 			std::string projectExt;
@@ -58,9 +81,17 @@ void VS10Generator::generateSLNFile(Parser& parser)
 			} else if (MonoDevelop == mIDEType) {
 				projectExt = ".cproj";
 			}
-			ofs << "Project(\"{" << guid << "}\") = \"" << (*target)->name
-				<< "\", \"" << (*target)->name << projectExt << "\", "
-				<< "\"{" << guid2 << "}\"" << std::endl
+			ofs << "Project(\"{" << guid << "}\") = \"" << projectName << "\", \"" << projectName << projectExt << "\", " << "\"{" << guid2 << "}\"" << std::endl
+				<< "\tProjectSection(ProjectDependencies) = postProject" << std::endl;
+			// Write project dependencies
+			if (!(*target)->contents["deps"].empty()) {
+				foreach (dep, (*target)->contents["deps"]) {
+					auto guids = guidMap[*dep];
+					// The second GUID is repeated twice for some reason
+					ofs << "\t\t{" << guids.second << "} = {" << guids.second << "}" << std::endl;
+				}
+			}
+			ofs << "\tEndProjectSection" << std::endl
 				<< "EndProject" << std::endl;
 		}
 
@@ -89,7 +120,10 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 {
 	std::string projectPath;
 	if (VisualStudio == mIDEType) {
-		projectPath = "vs10/" + target->name + ".vcxproj";
+		std::string ppath = "vs10/" + target->name;
+		createDir(ppath.c_str());
+
+		projectPath = "vs10/" + target->name + "/" + target->name + ".vcxproj";
 	} else if (MonoDevelop == mIDEType) {
 		projectPath = "monodevelop/" + target->name + ".cproj";
 	}
@@ -143,7 +177,7 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 			ofs << "<Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />" << std::endl;
 
 		ofs << "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|" << platform << "'\" Label=\"Configuration\">" << std::endl;
-		
+
 		std::string targetType;
 		if (Target::Library == target->type)
 			targetType = "DynamicLibrary";
@@ -183,26 +217,33 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 
 		ofs << "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|" << platform << "'\">" << std::endl
 			<< "<TargetName>" << target->name << "_d" << "</TargetName>" << std::endl
-			<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
-			<< "<OutDir>../</OutDir>" << std::endl;
+			<< "<LibraryPath>../../;$(LibraryPath)</LibraryPath>" << std::endl
+			<< "<OutDir>../../</OutDir>" << std::endl;
 
 		// Dump include paths
 		std::string allIncludePaths;
 
-		foreach(inc, target->contents["inc_paths"])
-		{
+		foreach(inc, parser.getSectionContents("globals.inc_paths")) {
 			if (isRelativePath(*inc)) {
-				allIncludePaths += "../" + *inc + ";";
+				allIncludePaths += "../../" + *inc + ";";
 			}
 			else {
 				allIncludePaths += *inc + ";";
 			}
 		}
 
-		foreach(inc, target->contents["platforms.win32.inc_paths"])
-		{
+		foreach(inc, target->contents["inc_paths"]) {
 			if (isRelativePath(*inc)) {
-				allIncludePaths += "../" + *inc + ";";
+				allIncludePaths += "../../" + *inc + ";";
+			}
+			else {
+				allIncludePaths += *inc + ";";
+			}
+		}
+
+		foreach(inc, target->contents["platforms.win32.inc_paths"]) {
+			if (isRelativePath(*inc)) {
+				allIncludePaths += "../../" + *inc + ";";
 			}
 			else {
 				allIncludePaths += *inc + ";";
@@ -214,8 +255,8 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 
 			<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|" << platform << "'\">" << std::endl
 			<< "<TargetName>" << target->name << "</TargetName>" << std::endl
-			<< "<LibraryPath>../;$(LibraryPath)</LibraryPath>" << std::endl
-			<< "<OutDir>../</OutDir>" << std::endl
+			<< "<LibraryPath>../../;$(LibraryPath)</LibraryPath>" << std::endl
+			<< "<OutDir>../../</OutDir>" << std::endl
 			<< "<IncludePath>$(IncludePath);" << allIncludePaths << "</IncludePath>" << std::endl
 			<< "</PropertyGroup>" << std::endl
 
@@ -291,7 +332,7 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 
 		foreach(hdr, target->contents["hdr_files"])
 		{
-			ofs << "<ClInclude Include=\"../" << *hdr << "\">" << std::endl
+			ofs << "<ClInclude Include=\"../../" << *hdr << "\">" << std::endl
 				<< "<FileType>CppHeader</FileType>" << std::endl
 				<< "</ClInclude>" << std::endl;
 		}
@@ -299,19 +340,19 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 		if (VisualStudio == mIDEType) {
 			foreach(hdr, target->contents["platforms.win32.hdr_files"])
 			{
-				ofs << "<ClInclude Include=\"../" << *hdr << "\">" << std::endl
+				ofs << "<ClInclude Include=\"../../" << *hdr << "\">" << std::endl
 					<< "<FileType>CppHeader</FileType>" << std::endl
 					<< "</ClInclude>" << std::endl;
 			}
 		} else if (MonoDevelop == mIDEType) {
 			foreach(hdr, target->contents["platforms.linux.hdr_files"])
 			{
-				ofs << "<ClInclude Include=\"../" << *hdr << "\">" << std::endl
+				ofs << "<ClInclude Include=\"../../" << *hdr << "\">" << std::endl
 					<< "<FileType>CppHeader</FileType>" << std::endl
 					<< "</ClInclude>" << std::endl;
 			}
 		}
-		
+
 		ofs << "</ItemGroup>" << std::endl;
 
 		// Write source file list
@@ -319,22 +360,18 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 
 		foreach(src, target->contents["src_files"])
 		{
-			ofs << "<ClCompile Include=\"../" << *src << "\" />" << std::endl;
+			ofs << "<ClCompile Include=\"../../" << *src << "\" />" << std::endl;
 		}
 
 		if (VisualStudio == mIDEType) {
 			foreach(src, target->contents["platforms.win32.src_files"])
 			{
-				ofs << "<ClInclude Include=\"../" << *src << "\">" << std::endl
-					<< "<FileType>CppHeader</FileType>" << std::endl
-					<< "</ClInclude>" << std::endl;
+				ofs << "<ClCompile Include=\"../../" << *src << "\" />" << std::endl;
 			}
 		} else if (MonoDevelop == mIDEType) {
 			foreach(src, target->contents["platforms.linux.src_files"])
 			{
-				ofs << "<ClInclude Include=\"../" << *src << "\">" << std::endl
-					<< "<FileType>CppHeader</FileType>" << std::endl
-					<< "</ClInclude>" << std::endl;
+				ofs << "<ClCompile Include=\"../../" << *src << "\" />" << std::endl;
 			}
 		}
 		ofs << "</ItemGroup>" << std::endl;
@@ -352,17 +389,17 @@ void VS10Generator::generateVCProject(Target* target, Parser& parser)
 void VS10Generator::generateUserprefs(Target* target, Parser& parser)
 {
 	if (MonoDevelop == mIDEType) return;
-	std::ofstream ofs("vs10/" + target->name + ".vcxproj.user");
+	std::ofstream ofs("vs10/" + target->name + "/" + target->name + ".vcxproj.user");
 	if (ofs.is_open()) {
-		
+
 		ofs << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl
 			<< "<Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">" << std::endl
 			<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">" << std::endl
-			<< "<LocalDebuggerWorkingDirectory>../</LocalDebuggerWorkingDirectory>" << std::endl
+			<< "<LocalDebuggerWorkingDirectory>../../</LocalDebuggerWorkingDirectory>" << std::endl
 			<< "<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>" << std::endl
 			<< "</PropertyGroup>" << std::endl
 			<< "<PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">" << std::endl
-			<< "<LocalDebuggerWorkingDirectory>../</LocalDebuggerWorkingDirectory>" << std::endl
+			<< "<LocalDebuggerWorkingDirectory>../../</LocalDebuggerWorkingDirectory>" << std::endl
 			<< "<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>" << std::endl
 			<< "</PropertyGroup>" << std::endl
 			<< "</Project>" << std::endl;

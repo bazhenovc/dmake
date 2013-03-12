@@ -5,7 +5,7 @@
 <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 <ProductVersion>10.0.0</ProductVersion>
 <SchemaVersion>2.0</SchemaVersion>
-<ProjectGuid>{bfa0da65-7d46-47f0-a5b3-b030553975f6}</ProjectGuid>
+<ProjectGuid>{d4df05a5-f32b-4c27-bd6a-aaf24429ab21}</ProjectGuid>
 <Target>Bin</Target>
 <Language>CPP</Language>
 <Compiler>
@@ -25,14 +25,14 @@
 </PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">
 <TargetName>dmake_d</TargetName>
-<LibraryPath>../;$(LibraryPath)</LibraryPath>
-<OutDir>../</OutDir>
+<LibraryPath>../../;$(LibraryPath)</LibraryPath>
+<OutDir>../../</OutDir>
 <IncludePath>$(IncludePath);</IncludePath>
 </PropertyGroup>
 <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Any CPU'">
 <TargetName>dmake</TargetName>
-<LibraryPath>../;$(LibraryPath)</LibraryPath>
-<OutDir>../</OutDir>
+<LibraryPath>../../;$(LibraryPath)</LibraryPath>
+<OutDir>../../</OutDir>
 <IncludePath>$(IncludePath);</IncludePath>
 </PropertyGroup>
 <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">
@@ -60,36 +60,36 @@
 </Link>
 </ItemDefinitionGroup>
 <ItemGroup>
-<ClInclude Include="../src/common.hh">
+<ClInclude Include="../../src/common.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/generator.hh">
+<ClInclude Include="../../src/generator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/guid.hh">
+<ClInclude Include="../../src/guid.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/makefilegenerator.hh">
+<ClInclude Include="../../src/makefilegenerator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/parser.hh">
+<ClInclude Include="../../src/parser.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/target.hh">
+<ClInclude Include="../../src/target.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/vs10generator.hh">
+<ClInclude Include="../../src/vs10generator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
-<ClInclude Include="../src/codeblocksgenerator.hh">
+<ClInclude Include="../../src/codeblocksgenerator.hh">
 <FileType>CppHeader</FileType>
 </ClInclude>
 </ItemGroup>
 <ItemGroup>
-<ClCompile Include="../src/main.cc" />
-<ClCompile Include="../src/parser.cc" />
-<ClCompile Include="../src/makefilegenerator.cc" />
-<ClCompile Include="../src/vs10generator.cc" />
-<ClCompile Include="../src/codeblocksgenerator.cc" />
+<ClCompile Include="../../src/main.cc" />
+<ClCompile Include="../../src/parser.cc" />
+<ClCompile Include="../../src/makefilegenerator.cc" />
+<ClCompile Include="../../src/vs10generator.cc" />
+<ClCompile Include="../../src/codeblocksgenerator.cc" />
 </ItemGroup>
 </Project>

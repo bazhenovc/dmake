@@ -83,6 +83,9 @@ void MakefileGenerator::generate(Parser& parser)
         // Build flags list
         ofs << targetFlags << " :=";
 
+		foreach(inc, parser.getSectionContents("globals.inc_paths")) {
+			ofs << " -I" << *inc;
+		}
         foreach(inc, (*itr)->contents["inc_paths"]) {
             ofs << " -I" << *inc;
         }
