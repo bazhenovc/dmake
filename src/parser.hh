@@ -2,16 +2,19 @@
 #pragma once
 
 #include "common.hh"
-
-struct Target;
+#include "target.hh"
 
 class Parser
 {
 public:
 
     Parser()
-    : mCurrentTarget(0)
-    {}
+        : mCurrentTarget(0)
+    {
+        mNameTargetMap["executable"] = Target::Executable;
+        mNameTargetMap["library"] = Target::Library;
+        mNameTargetMap["static_library"] = Target::StaticLibrary;
+    }
 
     ~Parser();
 
@@ -39,6 +42,8 @@ public:
     std::string fileName;
 
 private:
+
+    std::map<std::string, Target::Type> mNameTargetMap;
 
     std::list<Target*> mTargets;
     Target* mCurrentTarget;

@@ -9,5 +9,5 @@ class CodeBlocksGenerator : public Generator
 {
 public:
 
-	virtual void generate(Parser& parser);
+    virtual void generate(Parser& parser);
 };

@@ -7,6 +7,8 @@ struct Target
 {
     enum Type
     {
+        InvalidType = 0,
+
         Library,
         StaticLibrary,
         Executable

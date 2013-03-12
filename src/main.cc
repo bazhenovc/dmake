@@ -21,9 +21,9 @@ int main(int argc, char** argv)
     
     std::vector<Generator*> generators;
     generators.push_back(new MakefileGenerator);
-	generators.push_back(new VS10Generator(VS10Generator::VisualStudio));
-	generators.push_back(new VS10Generator(VS10Generator::MonoDevelop));
-	generators.push_back(new CodeBlocksGenerator);
+    generators.push_back(new VS10Generator(VS10Generator::VisualStudio));
+    generators.push_back(new VS10Generator(VS10Generator::MonoDevelop));
+    generators.push_back(new CodeBlocksGenerator);
     
     foreach (g, generators) {
         (*g)->generate(parser);

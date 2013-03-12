@@ -28,9 +28,9 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
 
     do {
 
-        // TODO: refactor
+        Target::Type type = mNameTargetMap[token];
 
-        if ("executable" == token) {
+        if (Target::InvalidType != type) { // Valid registered type
             std::string sectionName;
             std::string junk; // {
             stream >> sectionName;
@@ -39,46 +39,14 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
             Target* target = new Target;
             target->name = sectionName;
 
-            target->type = Target::Executable;
+            target->type = type;
 
             mTargets.push_back(target);
             mCurrentTarget = target;
 
             parseRecursive(stream, ""); // no nested targets
 
-        } else if ("library" == token) {
-            std::string sectionName;
-            std::string junk; // {
-            stream >> sectionName;
-            stream >> junk;
-
-            Target* target = new Target;
-            target->name = sectionName;
-
-            target->type = Target::Library;
-
-            mTargets.push_back(target);
-            mCurrentTarget = target;
-
-            parseRecursive(stream, ""); // no nested targets
-
-        } else if ("static_library" == token) {
-            std::string sectionName;
-            std::string junk; // {
-            stream >> sectionName;
-            stream >> junk;
-
-            Target* target = new Target;
-            target->name = sectionName;
-
-            target->type = Target::StaticLibrary;
-
-            mTargets.push_back(target);
-            mCurrentTarget = target;
-
-            parseRecursive(stream, ""); // no nested targets
-
-        }else if ("section" == token) {
+        } else if ("section" == token) {
             std::string sectionName;
             std::string junk; // {
             stream >> sectionName;
@@ -87,21 +55,20 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
             parseRecursive(stream, name + sectionPrefix + sectionName);
         } else {
             // Parse section contents
-			std::string contents;
-			if ("{" == token) {
-				char c;
-				// Read junk whitespace
-				stream.get(c);
-				while ('}' != c) {
-					stream.get(c);
-					contents.append(1, c);
-				}
-				// Remove junk ' }'
-				contents.resize(contents.size() - 2);
-			} else {
-				contents = token;
-			}
-
+            std::string contents;
+            if ("{" == token) {
+                char c;
+                // Read junk whitespace
+                stream.get(c);
+                while ('}' != c) {
+                    stream.get(c);
+                    contents.append(1, c);
+                }
+                // Remove junk ' }'
+                contents.resize(contents.size() - 2);
+            } else {
+                contents = token;
+            }
             if (mCurrentTarget)
                 mCurrentTarget->contents[name].push_back(contents);
             else
