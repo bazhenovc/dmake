@@ -2,6 +2,8 @@
 #include "parser.hh"
 #include "target.hh"
 
+#include <sstream>
+
 Parser::~Parser()
 {
     foreach (itr, mTargets) delete (*itr);
@@ -27,6 +29,27 @@ void Parser::parseRecursive(std::istream& stream, const std::string& name)
     }
 
     do {
+
+        if ("import" == token) {
+
+            std::string line;
+
+            char c;
+            while (true) {
+                stream.get(c);
+                if (';' == c)
+                    break;
+                line += c;
+            }
+
+            // Trim
+            std::stringstream trimmer;
+            trimmer << line;
+            line.clear();
+            trimmer >> line;
+
+            parse(line.c_str());
+        }
 
         Target::Type type = mNameTargetMap[token];
 
