@@ -8,8 +8,8 @@ void MakefileGenerator::generate(Parser& parser)
     std::ofstream ofs("Makefile");
 
     ofs << "# This makefile was generated automatically, please do not edit" << std::endl
-            << "BUILD_DIR := build" << std::endl
-            << "DEST_DIR := ." << std::endl;
+        << "BUILD_DIR := build" << std::endl
+        << "DEST_DIR := ." << std::endl;
 
     // Global compiler flags
     ofs << "GLOBAL_FLAGS := ";
@@ -22,11 +22,22 @@ void MakefileGenerator::generate(Parser& parser)
 
     // Local flags
     auto cppFlagList = parser.getSectionContents("compilers.gcc.cpp_flags");
-    std::string& cppFlags = flagMap["g++"];
+    std::string cppFlags;
 
     foreach(flag, cppFlagList) {
         cppFlags += " " + *flag;
     }
+
+     flagMap["g++"] = cppFlags;
+
+    auto cFlagList = parser.getSectionContents("compilers.gcc.c_flags");
+    std::string cFlags;
+
+    foreach(flag, cFlagList) {
+        cFlags += " " + *flag;
+    }
+
+     flagMap["gcc"] = cFlags;
 
     ofs << "all: dirs";
 
@@ -88,9 +99,9 @@ void MakefileGenerator::generate(Parser& parser)
         // Build flags list
         ofs << targetFlags << " :=";
 
-		foreach(inc, parser.getSectionContents("globals.inc_paths")) {
-			ofs << " -I" << *inc;
-		}
+        foreach(inc, parser.getSectionContents("globals.inc_paths")) {
+            ofs << " -I" << *inc;
+        }
         foreach(inc, (*itr)->contents["inc_paths"]) {
             ofs << " -I" << *inc;
         }
@@ -122,20 +133,20 @@ void MakefileGenerator::generate(Parser& parser)
 
         ofs << targetOut << ": $(" << targetObjects << ") " << deps << std::endl
             << "\techo \"linking " << targetOut << "\"" << std::endl;
-		if (Target::StaticLibrary == (*itr)->type)
-			ofs << "\tar rcs $(DEST_DIR)/" << targetOut << " $(" << targetObjects << ")" << std::endl;
-		else {
+        if (Target::StaticLibrary == (*itr)->type)
+            ofs << "\tar rcs $(DEST_DIR)/" << targetOut << " $(" << targetObjects << ")" << std::endl;
+        else {
 
-			ofs << "\t$(CXX) -L$(DEST_DIR) -Wl,-rpath=$(DEST_DIR) $(" << targetObjects << ") -o $(DEST_DIR)/" << targetOut;
+            ofs << "\t$(CXX) -L$(DEST_DIR) -Wl,-rpath=$(DEST_DIR) $(" << targetObjects << ") -o $(DEST_DIR)/" << targetOut;
 
-			if (Target::Library == (*itr)->type)
-				ofs << " -shared ";
+            if (Target::Library == (*itr)->type)
+                ofs << " -shared ";
 
-			foreach(link, (*itr)->contents["platforms.linux.linker"]) {
-				ofs << " " << (*link);
-			}
-			ofs << " " << linkDeps;
-		}
+            foreach(link, (*itr)->contents["platforms.linux.linker"]) {
+                ofs << " " << (*link);
+            }
+            ofs << " " << linkDeps;
+        }
 
         ofs << std::endl << std::endl;
     }

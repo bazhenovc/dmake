@@ -16,7 +16,8 @@ int main(int argc, char** argv)
         exit(1);
     }
     Parser parser;
-    parser.parse(argv[1]);
+    for (int i = 0; i < argc; ++i)
+        parser.parse(argv[i]);
     //parser.dump();
     
     std::vector<Generator*> generators;
